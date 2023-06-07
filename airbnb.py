@@ -1,6 +1,6 @@
 
 import numpy as np
-
+import pandas as pd
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -43,45 +43,51 @@ def welcome():
 # example @app.route("/api/v1.0/rental type/<two bedrooms>")
 #results = session.query(airbnb.rentaltype = two bedrooms).all()
 
-@app.route("/api/v1.0/bedrooms")
-def rentals():
+@app.route("/api/v1.0/bedrooms/<bedroom_num>")
+def bedrooms(bedroom_num):
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
-    """Return a list of all passenger names"""
+    columns = airbnb.__table__.columns
+    """Return the amount of bedrooms of each rental"""
     # Query all passengers
-    results = session.query(airbnb.bedrooms).all()
-
-    session.close()
-
-    # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
+    column_Names= [col.name for col in list (airbnb.__table__.columns)]
+    results = session.query(*columns).filter(airbnb.bedrooms == bedroom_num).all()
     
-    return jsonify(all_names)
+    session.close()
+    df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
+
+    return df
 
 
-@app.route("/api/v1.0/airbnb")
-def passengers():
+@app.route("/api/v1.0/price/<price_limit>")
+def price(price_limit):
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
-    """Return a list of passenger data including the name, age, and sex of each passenger"""
+    columns = airbnb.__table__.columns
+    """Return the price of each rental"""
     # Query all passengers
-  #  results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
-
+    column_Names= [col.name for col in list (airbnb.__table__.columns)]
+    results = session.query(*columns).filter(airbnb.realsum == price_limit).all()
+    
     session.close()
+    price_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
+    
+    return price_df
 
-    # Create a dictionary from the row data and append to a list of all_passengers
-    all_passengers = []
-    for name, age, sex in results:
-        passenger_dict = {}
-        passenger_dict["name"] = name
-        passenger_dict["age"] = age
-        passenger_dict["sex"] = sex
-        all_passengers.append(passenger_dict)
+@app.route("/api/v1.0/cleanliness/<rating>")
+def clean(rating):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+    columns = airbnb.__table__.columns
+    """Return the amount of bedrooms of each rental"""
+    # Query all passengers
+    column_Names= [col.name for col in list (airbnb.__table__.columns)]
+    results = session.query(*columns).filter(airbnb.cleanliness_rating == rating).all()
+    
+    session.close()
+    clean_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
 
-    return jsonify(all_passengers)
-
+    return clean_df
 
 if __name__ == '__main__':
     app.run(debug=True)
