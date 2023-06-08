@@ -38,10 +38,9 @@ def welcome():
     return (
         f"Available Routes:<br/>"
         f"/api/v1.0/bedrooms<br/>"
+        f"/api/v1.0/price/<price_limit>"
+        f"/api/v1.0/cleanliness/<rating>"
     )
-
-# example @app.route("/api/v1.0/rental type/<two bedrooms>")
-#results = session.query(airbnb.rentaltype = two bedrooms).all()
 
 @app.route("/api/v1.0/bedrooms/<bedroom_num>")
 def bedrooms(bedroom_num):
@@ -67,7 +66,7 @@ def price(price_limit):
     """Return the price of each rental"""
     # Query all passengers
     column_Names= [col.name for col in list (airbnb.__table__.columns)]
-    results = session.query(*columns).filter(airbnb.realsum == price_limit).all()
+    results = session.query(*columns).filter(airbnb.realsum <= price_limit).all()
     
     session.close()
     price_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
