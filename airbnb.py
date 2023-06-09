@@ -69,7 +69,7 @@ def bedrooms():
     """Return the amount of bedrooms of each rental"""
     # Query all passengers
     column_Names= [col.name for col in list (airbnb.__table__.columns)]
-    results = session.query(*columns).limit(50)
+    results = session.query(*columns).all()
     
     session.close()
     df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')

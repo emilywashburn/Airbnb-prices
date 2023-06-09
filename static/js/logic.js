@@ -37,8 +37,8 @@ fetch(url, {mode: 'no-cors'})
     console.log(jsonData);
 
     // Store the fetched JSON data as the initial data
-    let initialData = jsonData//.slice(0,1000);
-
+    var initialData = jsonData//.slice(0,1000);
+    console.log(initialData)
     // Function to update the markers on the map
     function updateMarkers(data) {
       // Clear existing markers
@@ -143,6 +143,7 @@ fetch(url, {mode: 'no-cors'})
       // Prepare data for the pie chart
       var piechartData = {
         labels: Object.keys(bedroomsCount),
+
         datasets: [
           {
             label: "Number of Airbnbs",
@@ -170,8 +171,10 @@ fetch(url, {mode: 'no-cors'})
       piechart = new Chart(ctx, {
         type: 'pie',
         data: piechartData,
-        options: {}
-      });
+        options:{plugins: {title: {
+          display: true,
+          text: 'Number of Bedrooms'
+        }}}})
 
       // Prepare data for the bar chart
       var priceChartData = {
