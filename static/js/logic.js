@@ -37,7 +37,7 @@ fetch(url, {mode: 'no-cors'})
     console.log(jsonData);
 
     // Store the fetched JSON data as the initial data
-    let initialData = jsonData.slice(0,100);
+    let initialData = jsonData//.slice(0,1000);
 
     // Function to update the markers on the map
     function updateMarkers(data) {
@@ -79,15 +79,15 @@ fetch(url, {mode: 'no-cors'})
       console.log(selectedCity, price, selectedWeekday, selectedWeekend);
       // Filter the data based on user inputs
       var filteredData = initialData.filter(item => {
-        //var correctDayType = (
-        //  (item.day_type === 'weekday' && selectedWeekday) ||
-        //  (item.day_type === 'weekend' && selectedWeekend)
-        //);
+        var correctDayType = (
+         (item.day_type === 'weekday' && selectedWeekday) ||
+         (item.day_type === 'weekend' && selectedWeekend)
+        );
     
         return (
-          //item.city === selectedCity &&
-          item.realsum <= price //&&
-          //correctDayType
+          item.city === selectedCity &&
+          item.realsum <= price &&
+          correctDayType
         );
       });
       console.log(filteredData)
