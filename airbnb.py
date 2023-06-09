@@ -6,7 +6,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 
 #################################################
@@ -31,6 +31,10 @@ app = Flask(__name__)
 #################################################
 # Flask Routes
 #################################################
+@app.route("/dashboard")
+def dashboard():
+    """List all available api routes."""
+    return render_template('index.html')
 
 @app.route("/")
 def welcome():
@@ -42,51 +46,64 @@ def welcome():
         f"/api/v1.0/cleanliness/<rating>"
     )
 
-@app.route("/api/v1.0/bedrooms/<bedroom_num>")
-def bedrooms(bedroom_num):
+# @app.route("/api/v1.0/bedrooms/<bedroom_num>")
+# def bedrooms(bedroom_num):
+#     # Create our session (link) from Python to the DB
+#     session = Session(engine)
+#     columns = airbnb.__table__.columns
+#     """Return the amount of bedrooms of each rental"""
+#     # Query all passengers
+#     column_Names= [col.name for col in list (airbnb.__table__.columns)]
+#     results = session.query(*columns).filter(airbnb.bedrooms == bedroom_num).all()
+    
+#     session.close()
+#     df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
+
+#     return df
+
+@app.route("/api/v1.0/bedrooms")
+def bedrooms():
     # Create our session (link) from Python to the DB
     session = Session(engine)
     columns = airbnb.__table__.columns
     """Return the amount of bedrooms of each rental"""
     # Query all passengers
     column_Names= [col.name for col in list (airbnb.__table__.columns)]
-    results = session.query(*columns).filter(airbnb.bedrooms == bedroom_num).all()
+    results = session.query(*columns).limit(50)
     
     session.close()
     df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
 
     return df
-
-
-@app.route("/api/v1.0/price/<price_limit>")
-def price(price_limit):
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-    columns = airbnb.__table__.columns
-    """Return the price of each rental"""
-    # Query all passengers
-    column_Names= [col.name for col in list (airbnb.__table__.columns)]
-    results = session.query(*columns).filter(airbnb.realsum <= price_limit).all()
+# @app.route("/api/v1.0/price/<price_limit>")
+# def price(price_limit):
+#     # Create our session (link) from Python to the DB
+#     session = Session(engine)
+#     columns = airbnb.__table__.columns
+#     """Return the price of each rental"""
+#     # Query all passengers
+#     column_Names= [col.name for col in list (airbnb.__table__.columns)]
+#     results = session.query(*columns).filter(airbnb.realsum <= price_limit).all()
     
-    session.close()
-    price_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
+#     session.close()
+#     price_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
     
-    return price_df
+#     return price_df
 
-@app.route("/api/v1.0/cleanliness/<rating>")
-def clean(rating):
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-    columns = airbnb.__table__.columns
-    """Return the amount of bedrooms of each rental"""
-    # Query all passengers
-    column_Names= [col.name for col in list (airbnb.__table__.columns)]
-    results = session.query(*columns).filter(airbnb.cleanliness_rating == rating).all()
+# @app.route("/api/v1.0/cleanliness/<rating>")
+# def clean(rating):
+#     # Create our session (link) from Python to the DB
+#     session = Session(engine)
+#     columns = airbnb.__table__.columns
+#     """Return the amount of bedrooms of each rental"""
+#     # Query cleanliness rating
+#     column_Names= [col.name for col in list (airbnb.__table__.columns)]
+#     results = session.query(*columns).filter(airbnb.cleanliness_rating == rating).all()
     
-    session.close()
-    clean_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
+#     session.close()
+#     clean_df = pd.DataFrame (columns= column_Names, data = results).to_json(orient='records')
 
-    return clean_df
+#     return clean_df
 
 if __name__ == '__main__':
     app.run(debug=True)

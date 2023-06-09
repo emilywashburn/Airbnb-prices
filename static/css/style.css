@@ -1,0 +1,22 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  height: 1000px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+}
+
+.row-chart {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.chart-container {
+  height: 100%;
+}

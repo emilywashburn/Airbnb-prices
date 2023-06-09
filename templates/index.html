@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Airbnb Data</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" crossorigin="" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/style.css')}}"">
+
+  <!-- Leaflet JavaScript code -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 jumbotron text-center">
+        <h1>Airbnb Data</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <form>
+          <div class="form-group">
+            <label for="city">City:</label>
+            <select id="selCity" class="form-control">
+              <option value="amsterdam">Amsterdam</option>
+              <option value="athens">Athens</option>
+              <option value="barcelona">Barcelona</option>
+              <option value="berlin">Berlin</option>
+              <option value="budapest">Budapest</option>
+              <option value="lisbon">Lisbon</option>
+              <option value="london">London</option>
+              <option value="paris">Paris</option>
+              <option value="rome">Rome</option>
+              <option value="vienna">Vienna</option>
+            </select>
+          </div>
+          <!-- <div class="form-group">
+            <label for="bedrooms">Bedrooms:</label>
+            <select id="selBedrooms" class="form-control">
+              <option value="1">1 Bedroom</option>
+              <option value="2">2 Bedrooms</option>
+              <option value="3">3 Bedrooms</option>
+              <option value="4">4 Bedrooms</option>
+              <option value="5">5 Bedrooms</option>
+            </select>
+          </div> -->
+        </form>
+      </div>
+
+      <div class="col-md-3">
+        <form>
+          <div class="form-group">
+            <label for="daytype">Day Type:</label>
+            <div class="form-check">
+              <input type="checkbox" id="weekday" class="form-check-input">
+              <label class="form-check-label" for="weekday">Weekdays</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" id="weekend" class="form-check-input">
+              <label class="form-check-label" for="weekend">Weekends</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-3">
+        <form>
+          <div class="form-group">
+            <label for="priceRange">Price Range:</label>
+            <input type="range" id="priceRange" min="0" max="3000" value="250" class="form-control">
+            <p>Selected Price: <span id="selectedPrice">250</span></p>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-3">
+        <button id="filter-btn" type="button" class="btn btn-secondary btn-lg btn-block">Filter Data</button>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row row-chart">
+        <div class="col-6">
+          <div class="chart-container" id="scatter-container">
+            <canvas id="scatterChart"></canvas>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="chart-container" id="pie-container">
+            <canvas id="bedroomsChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row row-chart">
+        <div class="col-6">
+          <div class="chart-container" id="bar-container">
+            <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="chart-container" id="histogram-container">
+            <canvas id="histogramChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    <div class="row">
+      <div class="col-md-7">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Listings Locations:</h3>
+          </div>
+          <div id="sample-metadata" class="panel-body"></div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div id="bar"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-5">
+        <div id="gauge"></div>
+      </div>
+      <div class="col-md-7">
+        <div id="bubble"></div>
+      </div>
+    </div>
+
+    <!-- The div where we'll insert our map -->
+    <div id="map"></div>
+
+    <!-- JavaScript file -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/logic.js')}}"></script>
+  </div>
+</body>
+
+</html>
