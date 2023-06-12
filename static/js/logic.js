@@ -164,7 +164,7 @@ fetch(url, {mode: 'no-cors'})
             bedroomsCount[numBedrooms] = 0;
         }
 
-        bedroomsSum[numBedrooms] += data[i].realSum;
+        bedroomsSum[numBedrooms] += data[i].realsum;
         bedroomsCount[numBedrooms] += 1;
       }
 
@@ -279,7 +279,7 @@ fetch(url, {mode: 'no-cors'})
           datasets: [{
             label: 'Satisfaction vs Price',
             data: data.map(item => ({
-              x: item.realSum,
+              x: item.realsum,
               y: item.guest_satisfaction_overall
             })),
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
