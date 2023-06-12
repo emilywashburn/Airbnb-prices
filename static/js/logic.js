@@ -24,7 +24,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(myMap);
 
-// Fetch data from the JSON file *change to flask route*
+// Fetch data from the flask route
 url = 'http://127.0.0.1:5000/api/v1.0/bedrooms'
 d3.json(url, {mode: 'no-cors'}).then(function(data) {
   console.log(data);
@@ -121,11 +121,11 @@ fetch(url, {mode: 'no-cors'})
         var numBedrooms = data[i].bedrooms;
 
         if (!bedroomsSum.hasOwnProperty(numBedrooms)) {
-            bedroomsSum[numBedrooms] = 0;
+            bedroomsSum[numBedrooms] = 0.0;
             bedroomsCount[numBedrooms] = 0;
         }
 
-        bedroomsSum[numBedrooms] += data[i].realSum;
+       bedroomsSum[numBedrooms] += data[i].realsum;
         bedroomsCount[numBedrooms] += 1;
       }
 
@@ -134,6 +134,7 @@ fetch(url, {mode: 'no-cors'})
       for (var key in bedroomsSum) {
         if (bedroomsSum.hasOwnProperty(key)) {
             averagePrices[key] = bedroomsSum[key] / bedroomsCount[key];
+           
         }
       }
 
@@ -240,7 +241,7 @@ fetch(url, {mode: 'no-cors'})
           datasets: [{
             label: 'Satisfaction vs Price',
             data: data.map(item => ({
-              x: item.realSum,
+              x: item.realsum,
               y: item.guest_satisfaction_overall
             })),
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
