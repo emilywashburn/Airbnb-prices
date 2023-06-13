@@ -19,6 +19,29 @@ const cityCoordinates = {
   "vienna": [48.208176, 16.373819]
 };
 
+
+// Declare an empty object to store the layer groups
+var layers = {};
+
+// Additional color-coding based on bedrooms
+const colorCodes = {
+  "0": "black",
+  "1": "blue",
+  "2": "yellow",
+  "3": "green",
+  "4": "red",
+  "5": "grey"
+};
+
+// Initialize layer groups for each bedroom category
+const layerGroups = {
+  "1": L.layerGroup().addTo(myMap),
+  "2": L.layerGroup().addTo(myMap),
+  "3": L.layerGroup().addTo(myMap),
+  "4": L.layerGroup().addTo(myMap),
+  "5": L.layerGroup().addTo(myMap)
+};
+
 // Add OpenStreetMap tiles to the map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -48,15 +71,38 @@ fetch(url, {mode: 'no-cors'})
         }
       });
 
+      // Group data by the number of bedrooms
+      var dataByBedrooms = {};
+      data.forEach(airbnb => {
+        if (!dataByBedrooms.hasOwnProperty(airbnb.bedrooms)) {
+          dataByBedrooms[airbnb.bedrooms] = [];
+        }
+        dataByBedrooms[airbnb.bedrooms].push(airbnb);
+      });
+      
       // Add a marker for each item in the filtered data
-      for (var i = 0; i < data.length; i++) {
-        var airbnb = data[i];
-        L.marker([airbnb.lat, airbnb.lng])
-          .bindPopup(`<h3>Price: ${airbnb.realSum}</h3> <hr> <h3>Bedrooms: ${airbnb.bedrooms.toLocaleString()}</h3>`)
-          .addTo(myMap);
-      }
+      for (var numBedrooms in dataByBedrooms) {
+        layers[numBedrooms] = L.layerGroup();
+        dataByBedrooms[numBedrooms].forEach(airbnb => {
+          L.marker([airbnb.lat, airbnb.lng], {
+            // Set the marker color according to the number of bedrooms
+            icon: L.icon({
+              iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${colorCodes[airbnb.bedrooms]}.png`,
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              shadowSize: [41, 41]
+            })
+          })
+            .bindPopup(`<h3>Price: ${airbnb.realSum}</h3>`)
+            .addTo(layers[numBedrooms]);
+        });
     }
-
+    // Add the layer groups to the map (only the first one by default)
+    layers[Object.keys(layers)[0]].addTo(myMap);
+    // Update the layer control
+    L.control.layers(null, layers, { collapsed: false }).addTo(myMap);
+  }
     // Get the slider and the display paragraph elements
     var priceRange = document.getElementById('priceRange');
     var selectedPrice = document.getElementById('selectedPrice');
@@ -124,8 +170,8 @@ fetch(url, {mode: 'no-cors'})
             bedroomsSum[numBedrooms] = 0.0;
             bedroomsCount[numBedrooms] = 0;
         }
-
        bedroomsSum[numBedrooms] += data[i].realsum;
+        bedroomsSum[numBedrooms] += data[i].realSum;
         bedroomsCount[numBedrooms] += 1;
       }
 
