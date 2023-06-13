@@ -81,9 +81,9 @@ fetch(url, {mode: 'no-cors'})
       });
       
       // Add a marker for each item in the filtered data
-      for (var numBedrooms in dataByBedrooms) {
-        layers[numBedrooms] = L.layerGroup();
-        dataByBedrooms[numBedrooms].forEach(airbnb => {
+      for (var numBedrooms2 in dataByBedrooms) {
+        layers[numBedrooms2] = L.layerGroup();
+        dataByBedrooms[numBedrooms2].forEach(airbnb => {
           L.marker([airbnb.lat, airbnb.lng], {
             // Set the marker color according to the number of bedrooms
             icon: L.icon({
@@ -94,8 +94,8 @@ fetch(url, {mode: 'no-cors'})
               shadowSize: [41, 41]
             })
           })
-            .bindPopup(`<h3>Price: ${airbnb.realSum}</h3>`)
-            .addTo(layers[numBedrooms]);
+            .bindPopup(`<h3>Price: ${Math.round(airbnb.realsum)}</h3>`)
+            .addTo(layers[numBedrooms2]);
         });
     }
     // Add the layer groups to the map (only the first one by default)
@@ -171,7 +171,7 @@ fetch(url, {mode: 'no-cors'})
             bedroomsCount[numBedrooms] = 0;
         }
        bedroomsSum[numBedrooms] += data[i].realsum;
-        bedroomsSum[numBedrooms] += data[i].realSum;
+        bedroomsSum[numBedrooms] += data[i].realsum;
         bedroomsCount[numBedrooms] += 1;
       }
 
