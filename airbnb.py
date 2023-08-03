@@ -12,7 +12,7 @@ from flask import Flask, jsonify, render_template
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("postgresql://postgres:Coty1209@localhost/airbnb_data2")
+engine = create_engine("postgresql://postgres:*****@localhost/airbnb_data2")
 #print (engine)
 # reflect an existing database into a new model
 Base = automap_base()
